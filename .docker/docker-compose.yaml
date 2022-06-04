@@ -7,7 +7,7 @@ services:
         ports:
             - 8089:8080
         volumes:
-            - ~/.gitconfig:/home/developer/.gitconfig
+            # - /.gitconfig:/home/developer/.gitconfig
             - ~/.ssh:/home/developer/.ssh
             - application_home:/home/developer
             - ../:/application
