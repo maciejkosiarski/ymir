@@ -1,0 +1,46 @@
+monolog:
+    channels: ["video_stream_v1", "http_server_v1","hosts"]
+    handlers:
+        main:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+            channels: ["!event", "!video_stream_v1", "!http_server_v1","!hosts"]
+        # uncomment to get logging in your browser
+        # you may have to allow bigger header sizes in your Web server configuration
+        #firephp:
+        #    type: firephp
+        #    level: info
+        #chromephp:
+        #    type: chromephp
+        #    level: info
+        console:
+            type: console
+            process_psr_3_messages: false
+            channels: ["!event", "!doctrine", "!console"]
+
+        video_stream_v1:
+            channels: [ "video_stream_v1" ]
+            path: "%kernel.logs_dir%/video_stream_v1.log"
+            level: info
+            type: rotating_file
+            max_files: 5
+            filename_format: "{filename}_{date}"
+            date_format: "Y"
+
+        http_server_v1:
+            channels: [ "http_server_v1" ]
+            path: "%kernel.logs_dir%/http/http_server_v1.log"
+            level: info
+            type: rotating_file
+            max_files: 5
+            filename_format: "{filename}_{date}"
+            date_format: "Y-m"
+        hosts:
+            channels: [ "hosts" ]
+            path: "%kernel.logs_dir%/hosts.log"
+            level: info
+            type: rotating_file
+            max_files: 5
+            filename_format: "{filename}_{date}"
+            date_format: "Y-m"

@@ -1,0 +1,44 @@
+version: "3.7"
+services:
+    application:
+        image: ${DEV_IMAGE}
+        container_name: ${ALIAS}-application
+        restart: on-failure
+        ports:
+            - 8089:8080
+        volumes:
+            - ~/.gitconfig:/home/developer/.gitconfig
+            - ~/.ssh:/home/developer/.ssh
+            - application_home:/home/developer
+            - ../:/application
+            - ./dev/config/php/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
+        environment:
+            - PHP_IDE_CONFIG=serverName=developer.local
+        command: [ tail, '-f', /dev/null ]
+        networks:
+            application:
+                aliases:
+                    - ${ALIAS}-application
+
+    server:
+        image: nginx:1.16.1
+        container_name: ${ALIAS}-nginx
+        restart: on-failure
+        working_dir: /application
+        volumes:
+            - ../:/application
+            - ./dev/config/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        ports:
+            - 80:80
+        networks:
+            application:
+                aliases:
+                    - ${ALIAS}-nginx
+
+networks:
+    application:
+        name: ${ALIAS}
+
+volumes:
+    application_home:
+        name: ${ALIAS}-application-home
